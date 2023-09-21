@@ -3,6 +3,9 @@
 短网址生成系统
 - 前后端分离 SpringBoot2.x+Vue2.x
 - 前端代码在rain目录下
+- 更改相关配置文件
+- MySQL
+- Redis
 
 # 效果截图
 
