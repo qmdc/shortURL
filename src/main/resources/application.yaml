@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://xxx/xxx?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: xxx
+    password: xxx
+    druid:
+      initial-size: 10
+      max-active: 10
+      min-idle: 5
+      max-wait: 30000
+      validation-query: select 1
+      test-on-borrow: false
+      test-while-idle: true
+  redis:
+    host: xxx
+    port: xxx
+    password: xxx
+    database: xxx
+  mail:
+    username: xxx
+    password: xxx
+    host: xxx
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml  #扫描的xml路径
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启日志
+    map-underscore-to-camel-case: false  #自动驼峰映射
+  global-config:
+    db-config:
+      logic-delete-field: deleted      # 全局逻辑删除的实体字段名
+      logic-delete-value: 1         # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0     # 逻辑未删除值(默认为 0)
