@@ -9,7 +9,7 @@ module.exports = {
   devServer:{
     proxy: {
       '/api': {
-        target: 'https://youyouyou.qiandao.space',
+        target: 'http://127.0.0.1:8025',
         pathRewrite: { '^/api': '' },
       },
     },

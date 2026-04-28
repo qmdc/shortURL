@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://xxx/xxx?useSSL=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: xxx
-    password: xxx
+    url: jdbc:mysql://106.54.26.72:3316/trae?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234Abc666
     druid:
       initial-size: 10
       max-active: 10
@@ -13,10 +13,10 @@ spring:
       test-on-borrow: false
       test-while-idle: true
   redis:
-    host: xxx
-    port: xxx
-    password: xxx
-    database: xxx
+      host: 106.54.26.72
+      port: 6389
+      password: 1234Abc666
+      database: 0
   mail:
     username: xxx
     password: xxx
