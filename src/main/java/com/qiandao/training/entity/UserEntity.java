@@ -12,21 +12,17 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@TableName("map")
-public class MapEntity  implements Serializable {
+@TableName("user")
+public class UserEntity implements Serializable {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private String id;
 
-    private String user_id;
+    private String username;
 
-    private String url;
+    private String password;
 
-    private String md5;
-
-    private String random_url;
-
-    private Integer email_num;
+    private String email;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "Asia/Shanghai")
     @TableField(fill = FieldFill.INSERT)

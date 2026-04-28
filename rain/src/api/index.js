@@ -28,5 +28,42 @@ export const record=()=>{
     })
 }
 
+export const login=(data)=>{
+    return request({
+        method:'POST',
+        url:`/user/login`,
+        data:data,
+    })
+}
+
+export const register=(data)=>{
+    return request({
+        method:'POST',
+        url:`/user/register`,
+        data:data,
+    })
+}
+
+export const getUserInfo=()=>{
+    return request({
+        method:'GET',
+        url:`/user/info`,
+    })
+}
+
+export const getUserShortUrls=()=>{
+    return request({
+        method:'GET',
+        url:`/user/shorturls`,
+    })
+}
+
+export const deleteShortUrl=(id)=>{
+    return request({
+        method:'DELETE',
+        url:`/shorturl/${id}`,
+    })
+}
+
 
 

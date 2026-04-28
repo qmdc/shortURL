@@ -3,6 +3,7 @@ package com.qiandao.training.controller;
 import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.qiandao.training.config.UserContext;
 import com.qiandao.training.entity.MapEntity;
 import com.qiandao.training.entity.RecordVo;
 import com.qiandao.training.global.Constant;
@@ -14,10 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
@@ -43,27 +41,90 @@ public class ShortCodeController {
     @Autowired
     private JavaMailSender mailSender;
 
-
-    //生成短链接
     @GetMapping("/create/shorturl")
     public R shortcode(String url) {
-        if (url == null) {
+        if (url == null || url.isBlank()) {
             return R.error("url不能为空");
         }
+
+        String userId = UserContext.getUserId();
+        if (userId == null) {
+            return R.error("用户未登录");
+        }
+
         QueryWrapper<MapEntity> wrapper = new QueryWrapper<>();
-        MapEntity mapEntity = mapService.getOne(wrapper.eq("url", url));
+        wrapper.eq("url", url).eq("user_id", userId);
+        MapEntity mapEntity = mapService.getOne(wrapper);
         if (mapEntity != null) {
             return R.ok().setData(mapEntity);
         }
+
         String md5 = SecureUtil.md5(url);
         String random_url = RandomUtil.getStringRandom(7);
-        MapEntity entity = MapEntity.builder().url(url).md5(md5).random_url(random_url).build();
+        MapEntity entity = MapEntity.builder()
+                .user_id(userId)
+                .url(url)
+                .md5(md5)
+                .random_url(random_url)
+                .build();
         boolean save = mapService.save(entity);
         if (save) {
             log.info("短链接生成成功:{}", JSON.toJSON(entity));
             return R.ok().setData(entity);
         }
         return R.error("短码生成失败");
+    }
+
+    @GetMapping("/user/shorturls")
+    public R getUserShortUrls() {
+        String userId = UserContext.getUserId();
+        if (userId == null) {
+            return R.error("用户未登录");
+        }
+
+        QueryWrapper<MapEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId).orderByDesc("create_time");
+        List<MapEntity> list = mapService.list(wrapper);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (MapEntity entity : list) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", entity.getId());
+            map.put("url", entity.getUrl());
+            map.put("md5", entity.getMd5());
+            map.put("random_url", entity.getRandom_url());
+            map.put("create_time", entity.getCreate_time());
+
+            String clickNum = redisUtil.get(entity.getUrl());
+            map.put("click_num", clickNum != null ? clickNum : "0");
+
+            resultList.add(map);
+        }
+
+        return R.ok().setData(resultList);
+    }
+
+    @DeleteMapping("/shorturl/{id}")
+    public R deleteShortUrl(@PathVariable("id") String id) {
+        String userId = UserContext.getUserId();
+        if (userId == null) {
+            return R.error("用户未登录");
+        }
+
+        QueryWrapper<MapEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("id", id).eq("user_id", userId);
+        MapEntity entity = mapService.getOne(wrapper);
+
+        if (entity == null) {
+            return R.error("短链接不存在或无权删除");
+        }
+
+        boolean remove = mapService.remove(wrapper);
+        if (remove) {
+            log.info("短链接删除成功:{}", id);
+            return R.ok("删除成功");
+        }
+        return R.error("删除失败");
     }
 
     //访问短链接
