@@ -9,7 +9,7 @@ import java.util.Date;
 @Mapper
 public interface VisitRecordArchiveDao extends BaseMapper<VisitRecordArchiveEntity> {
 
-    @Insert("INSERT INTO visit_record_archive " +
+    @Insert("INSERT INTO history " +
             "(id, map_id, url, ip, user_agent, referer, country, province, city, device_type, browser, os, is_unique, create_time, archive_time) " +
             "SELECT id, map_id, url, ip, user_agent, referer, country, province, city, device_type, browser, os, is_unique, create_time, NOW() " +
             "FROM visit_record " +

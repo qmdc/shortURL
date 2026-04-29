@@ -13,9 +13,9 @@ public class VisitArchiveTask {
     @Autowired
     private VisitRecordService visitRecordService;
 
-    private static final int KEEP_DAYS = 30;
+    private static final int KEEP_DAYS = 90;
 
-    @Scheduled(cron = "0 30 3 * * ?")
+    @Scheduled(cron = "0 30 3 1 * ?")
     public void archiveOldRecords() {
         log.info("开始执行定时归档任务，保留最近{}天的数据", KEEP_DAYS);
         try {

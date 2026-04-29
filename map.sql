@@ -78,10 +78,10 @@ CREATE TABLE `visit_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='访问记录表';
 
 -- ----------------------------
--- Table structure for visit_record_archive
+-- Table structure for history
 -- ----------------------------
-DROP TABLE IF EXISTS `visit_record_archive`;
-CREATE TABLE `visit_record_archive` (
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE `history` (
   `id` varchar(255) NOT NULL COMMENT '主键ID',
   `map_id` varchar(255) DEFAULT NULL COMMENT '短链接映射ID',
   `url` varchar(5000) DEFAULT NULL COMMENT '原URL',
@@ -100,6 +100,6 @@ CREATE TABLE `visit_record_archive` (
   PRIMARY KEY (`id`),
   KEY `idx_map_id` (`map_id`),
   KEY `idx_create_time` (`create_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='访问记录归档表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='访问记录历史归档表';
 
 SET FOREIGN_KEY_CHECKS = 1;
