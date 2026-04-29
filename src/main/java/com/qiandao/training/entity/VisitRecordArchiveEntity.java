@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@TableName("visit_record_archive")
+@TableName("history")
 public class VisitRecordArchiveEntity implements Serializable {
 
     @TableId(value = "id", type = IdType.ASSIGN_ID)

@@ -72,6 +72,8 @@ public class VisitRecordServiceImpl extends ServiceImpl<VisitRecordDao, VisitRec
                 setAntiFloodCache(mapId, ip);
             }
 
+            updateRedisClickCount(url);
+
             log.info("访问记录保存成功: mapId={}, ip={}, isUnique={}", mapId, ip, isUnique);
             return saved;
         } catch (Exception e) {
@@ -90,6 +92,23 @@ public class VisitRecordServiceImpl extends ServiceImpl<VisitRecordDao, VisitRec
     private void setAntiFloodCache(String mapId, String ip) {
         String key = ANTI_FLOOD_PREFIX + mapId + ":" + ip;
         redisUtil.setEx(key, "1", ANTI_FLOOD_MINUTES, TimeUnit.MINUTES);
+    }
+
+    private void updateRedisClickCount(String url) {
+        if (url == null || url.isBlank()) {
+            return;
+        }
+        String current = redisUtil.get(url);
+        if (current == null) {
+            redisUtil.set(url, "1");
+        } else {
+            try {
+                int count = Integer.parseInt(current) + 1;
+                redisUtil.set(url, String.valueOf(count));
+            } catch (NumberFormatException e) {
+                redisUtil.set(url, "1");
+            }
+        }
     }
 
     private String getClientIp(HttpServletRequest request) {
