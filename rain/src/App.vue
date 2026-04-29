@@ -12,7 +12,7 @@
           <router-link class="list-group-item" active-class="active" to="/streaming">访问统计</router-link>
         </el-menu-item>
         <el-menu-item index="4">
-          <router-link class="list-group-item" active-class="active" to="/record">发件记录</router-link>
+          <router-link class="list-group-item" active-class="active" to="/record">访问分析</router-link>
         </el-menu-item>
         <el-submenu index="5" style="float:right;">
           <template slot="title">
@@ -73,7 +73,8 @@ body{
   border:0;
 }
 .container {
-  width: 600px;
+  width: 90%;
+  max-width: 1400px;
   margin: 0 auto;
 }
 .list-group-item {
