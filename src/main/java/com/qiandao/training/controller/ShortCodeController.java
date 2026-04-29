@@ -9,6 +9,7 @@ import com.qiandao.training.entity.RecordVo;
 import com.qiandao.training.global.Constant;
 import com.qiandao.training.global.R;
 import com.qiandao.training.service.MapService;
+import com.qiandao.training.service.VisitRecordService;
 import com.qiandao.training.utils.RandomUtil;
 import com.qiandao.training.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +41,10 @@ public class ShortCodeController {
     @SuppressWarnings("all")
     @Autowired
     private JavaMailSender mailSender;
+
+    @SuppressWarnings("all")
+    @Autowired
+    private VisitRecordService visitRecordService;
 
     @GetMapping("/create/shorturl")
     public R shortcode(String url) {
@@ -134,11 +139,10 @@ public class ShortCodeController {
         wrapper.eq("id", shorturl).or().eq("md5", shorturl).or().eq("random_url", shorturl);
         MapEntity mapEntity = mapService.getOne(wrapper);
         if (mapEntity != null) {
-            boolean click = clickNum(mapEntity.getUrl());
-            if (!click) {
-                log.error("{} 的访问量统计失败", mapEntity.getUrl());
+            boolean recorded = visitRecordService.recordVisit(mapEntity.getId(), mapEntity.getUrl(), request);
+            if (recorded) {
+                log.info("访问记录保存成功: {} -> {}", shorturl, mapEntity.getUrl());
             }
-            log.info("{} 的访问量统计成功", mapEntity.getUrl());
             response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
             response.setHeader("Location", mapEntity.getUrl());
         } else {

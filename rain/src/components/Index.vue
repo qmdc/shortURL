@@ -51,9 +51,10 @@
         {{ scope.row.create_time }}
       </template>
     </el-table-column>
-    <el-table-column label="操作" width="100" fixed="right">
+    <el-table-column label="操作" width="150" fixed="right">
       <template slot-scope="scope">
         <el-button type="text" size="small" @click="copyUrl(scope.row)">复制</el-button>
+        <el-button type="text" size="small" @click="goToAnalytics(scope.row)">分析</el-button>
         <el-button type="text" size="small" style="color: #F56C6C" @click="deleteUrl(scope.row)">删除</el-button>
       </template>
     </el-table-column>
@@ -145,6 +146,11 @@ export default {
         message: '短链接已复制到剪贴板',
         type: 'success'
       });
+    },
+    goToAnalytics(row) {
+      if (row && row.id) {
+        this.$router.push(`/analytics/${row.id}`);
+      }
     },
     async deleteUrl(row) {
       this.$confirm('确定要删除该短链接吗？', '提示', {

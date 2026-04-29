@@ -7,6 +7,7 @@ import Recovery from "@/components/Recovery.vue";
 import Record from "@/components/Record.vue";
 import Login from "@/components/Login.vue";
 import Register from "@/components/Register.vue";
+import AnalyticsDetail from "@/components/AnalyticsDetail.vue";
 import store from "@/store";
 
 //创建并暴露一个路由器
@@ -52,6 +53,12 @@ const router =  new VueRouter({
                 name: 'record',
                 path: '/record',
                 component: Record,
+                meta: { requiresAuth: true }
+            },
+            {
+                name: 'analytics-detail',
+                path: '/analytics/:mapId',
+                component: AnalyticsDetail,
                 meta: { requiresAuth: true }
             }
         ]
